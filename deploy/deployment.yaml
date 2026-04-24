@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crypto-landingpage
+  name: astro-pinwheel
   labels:
-    app: crypto-landingpage
+    app: astro-pinwheel
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: crypto-landingpage
+      app: astro-pinwheel
   template:
     metadata:
       labels:
-        app: crypto-landingpage
+        app: astro-pinwheel
     spec:
       containers:
-        - name: crypto-landingpage
-          image: virtapp/crypto-landingpage:latest
+        - name: astro-pinwheel
+          image: virtapp/astro-pinwheel:latest
           ports:
             - containerPort: 3000
           env:
@@ -43,14 +43,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: crypto-landingpage
+  name: astro-pinwheel
 spec:
   selector:
-    app: crypto-landingpage
+    app: astro-pinwheel
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3000
+      targetPort: 80
   type: ClusterIP
 
 ---
@@ -58,10 +58,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-route-crypto-landingpage
+  name: ingress-route-astro-pinwheel
   annotations:
     nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "route-crypterio"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route-astro-pinwheel"
     nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
     nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
@@ -71,7 +71,7 @@ spec:
   tls:
     - hosts:
         - app-demo01.appflex.io
-      secretName: crypterio-tls
+      secretName: appflex-tls
   rules:
     - host: app-demo01.appflex.io
       http:
@@ -80,6 +80,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: crypto-landingpage
+                name: astro-pinwheel
                 port:
                   number: 80
