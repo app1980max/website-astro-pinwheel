@@ -3,19 +3,16 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Enable corepack (Yarn)
 RUN corepack enable
 
-# Copy dependency files
+# Copy only dependency files first (better caching)
 COPY package.json yarn.lock ./
 
-# Install deps
 RUN yarn install --frozen-lockfile
 
-# Copy project
+# Now copy everything else
 COPY . .
 
-# Build
 RUN yarn build
 
 
@@ -23,6 +20,7 @@ RUN yarn build
 FROM nginx:alpine
 
 RUN rm -rf /usr/share/nginx/html/*
+
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
