@@ -1,33 +1,28 @@
-
 # ---------- Stage 1: Build ----------
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json ./
+# Copy dependency files
+COPY package.json yarn.lock ./
 
-# Install deps
-RUN npm ci
+# Install deps using yarn
+RUN yarn install --frozen-lockfile
 
 # Copy project
 COPY . .
 
 # Build Astro site
-RUN npm run build
+RUN yarn build
+
 
 # ---------- Stage 2: Serve ----------
 FROM nginx:alpine
 
-# Remove default nginx static files
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy built site from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port
 EXPOSE 80
 
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
-
