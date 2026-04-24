@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crypto-landingpage
+  labels:
+    app: crypto-landingpage
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crypto-landingpage
+  template:
+    metadata:
+      labels:
+        app: crypto-landingpage
+    spec:
+      containers:
+        - name: crypto-landingpage
+          image: virtapp/crypto-landingpage:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+          resources: {}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: crypto-landingpage
+spec:
+  selector:
+    app: crypto-landingpage
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-route-crypto-landingpage
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route-crypterio"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - app-demo01.appflex.io
+      secretName: crypterio-tls
+  rules:
+    - host: app-demo01.appflex.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: crypto-landingpage
+                port:
+                  number: 80
