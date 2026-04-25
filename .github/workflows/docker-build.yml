@@ -10,6 +10,8 @@ on:
 
 env:
   IMAGE_NAME: astro-pinwheel
+  NAMESPACE: default
+  DEPLOYMENT_NAME: astro-pinwheel
 
 jobs:
   build:
@@ -45,3 +47,43 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      # ☸️ Setup kubectl
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+
+      # 🔑 kubeconfig
+      - name: Set kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+
+      # 🔍 Verify cluster
+      - name: Check cluster
+        run: kubectl get nodes
+
+      # 📦 Apply manifests
+      - name: Apply base manifests
+        run: |
+          kubectl apply -n $NAMESPACE -f deploy/deployment.yaml
+
+      # 🚀 Deploy new image
+      - name: Deploy new version
+        run: |
+          IMAGE="${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+
+          kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} \
+            ${DEPLOYMENT_NAME}=${IMAGE} \
+            -n $NAMESPACE
+
+      # ⏳ Wait rollout
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} \
+            -n $NAMESPACE --timeout=180s
+
+      # ❗ Verify deployment
+      - name: Verify deployment
+        run: |
+          kubectl get deployment ${{ env.DEPLOYMENT_NAME }} -n $NAMESPACE
+          kubectl get pods -l app=${{ env.DEPLOYMENT_NAME }} -n $NAMESPACE
