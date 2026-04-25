@@ -36,8 +36,8 @@ jobs:
         with:
           images: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
           tags: |
+            type=sha,prefix=
             type=raw,value=latest
-            type=sha
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -73,8 +73,9 @@ jobs:
           IMAGE="${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
           kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} \
-            ${DEPLOYMENT_NAME}=${IMAGE} \
-            -n $NAMESPACE
+           astro-pinwheel=${IMAGE} \
+           -n $NAMESPACE
+          
 
       # ⏳ Wait rollout
       - name: Wait for rollout
