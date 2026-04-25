@@ -8,7 +8,7 @@ RUN corepack enable
 # Copy only dependency files first (better caching)
 COPY package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --non-interactive
 
 # Now copy everything else
 COPY . .
