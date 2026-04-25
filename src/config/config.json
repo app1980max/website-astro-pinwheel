@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "App | Pinwheel Astro",
-    "base_url": "https://pinwheel-astro.vercel.app",
+    "base_url": "https://app-demo01.appflex.io",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
