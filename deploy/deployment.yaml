@@ -5,8 +5,7 @@ metadata:
   labels:
     app: astro-pinwheel
 spec:
-  replicas: 1
-  terminationGracePeriodSeconds: 10
+  replicas: 2
   selector:
     matchLabels:
       app: astro-pinwheel
@@ -15,9 +14,11 @@ spec:
       labels:
         app: astro-pinwheel
     spec:
+      terminationGracePeriodSeconds: 10 
       containers:
         - name: astro-pinwheel
           image: virtapp/astro-pinwheel:latest
+          imagePullPolicy: Always 
           ports:
             - containerPort: 80
           env:
@@ -29,15 +30,14 @@ spec:
               path: /
               port: 80
             initialDelaySeconds: 15
-            timeoutSeconds: 2
-            failureThreshold: 3
+            timeoutSeconds: 3
+            failureThreshold: 5
           livenessProbe:
             httpGet:
               path: /
               port: 80
             initialDelaySeconds: 30
             timeoutSeconds: 2
-          imagePullPolicy: Always 
 
 ---
 
@@ -67,7 +67,6 @@ metadata:
     nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
     nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   tls:
