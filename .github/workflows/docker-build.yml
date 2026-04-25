@@ -70,18 +70,21 @@ jobs:
       # 🚀 Deploy new image
       - name: Deploy new version
         run: |
-          IMAGE="virtapp/astro-pinwheel:${{ steps.meta.outputs.version }}"
+          IMAGE="${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}"
 
           kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} \
             astro-pinwheel=${IMAGE} \
             -n $NAMESPACE
 
       # ⏳ Wait rollout
-      - name: Wait for rollout
+      - name: Wait for rollout (with auto rollback)
         run: |
-          kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} \
-            -n $NAMESPACE --timeout=180s
-
+          if ! kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n $NAMESPACE --timeout=180s; then
+            echo "❌ Rollout failed → rolling back"
+            kubectl rollout undo deployment/${{ env.DEPLOYMENT_NAME }} -n $NAMESPACE
+            exit 1
+          fi
+          
       # ❗ Verify deployment
       - name: Verify deployment
         run: |
