@@ -3,13 +3,13 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy only package.json (no lock file!)
+COPY package.json ./
 
-# Install deps (ignore peer conflicts + avoid ci completely)
+# Install deps (handle your Astro conflict too)
 RUN npm install --legacy-peer-deps
 
-# Copy source
+# Copy rest of app
 COPY . .
 
 # Build
