@@ -3,10 +3,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy only package.json (no lock file!)
+# ✅ ONLY package.json (no lock file!)
 COPY package.json ./
 
-# Install deps (handle your Astro conflict too)
+# Install deps (handles your Astro conflict)
 RUN npm install --legacy-peer-deps
 
 # Copy rest of app
@@ -14,7 +14,6 @@ COPY . .
 
 # Build
 RUN npm run build
-
 
 # ---------- Stage 2: Serve ----------
 FROM nginx:alpine
