@@ -20,7 +20,6 @@ spec:
         app: astro-pinwheel
     spec:
       terminationGracePeriodSeconds: 10 
-      
       containers:
         - name: astro-pinwheel
           image: virtapp/astro-pinwheel:latest
