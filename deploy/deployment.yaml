@@ -6,6 +6,7 @@ metadata:
     app: astro-pinwheel
 spec:
   replicas: 1
+  terminationGracePeriodSeconds: 10
   selector:
     matchLabels:
       app: astro-pinwheel
@@ -27,14 +28,15 @@ spec:
             httpGet:
               path: /
               port: 80
-            initialDelaySeconds: 10
-            periodSeconds: 5
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /
               port: 80
-            initialDelaySeconds: 20
-            periodSeconds: 10
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
           imagePullPolicy: Always 
 
 ---
