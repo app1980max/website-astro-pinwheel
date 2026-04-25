@@ -69,8 +69,8 @@ members:
     - name: Eleanor Pena
       field: Co-founder & COO
       image: "/images/users/user-1.png"
-    - name: Bukiakta Bansalo
-      field: Product Manager
+    - name: Yevgeni Shapiro
+      field: CTO | Product Manager
       image: "/images/users/user-2.png"
     - name: Ortrin Okaster
       field: Software Engineer
