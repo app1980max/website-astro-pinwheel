@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,12 +24,9 @@ spec:
       containers:
         - name: astro-pinwheel
           image: virtapp/astro-pinwheel:latest
-          imagePullPolicy: Always 
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
-          env:
-            - name: NODE_ENV
-              value: "production"
           resources: {}
           readinessProbe:
             httpGet:
@@ -75,11 +73,11 @@ kind: Ingress
 metadata:
   name: ingress-route-astro-pinwheel
   annotations:
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "route-astro-pinwheel"
-    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
-    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
-    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+    #nginx.ingress.kubernetes.io/affinity: "cookie"
+    #nginx.ingress.kubernetes.io/session-cookie-name: "route-astro-pinwheel"
+    #nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    #nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    #nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
 spec:
   ingressClassName: nginx
   tls:
