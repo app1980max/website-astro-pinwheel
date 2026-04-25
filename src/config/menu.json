@@ -43,11 +43,6 @@
           "name": "Sign In",
           "url": "/signin"
         },
-
-        {
-          "name": "Elements",
-          "url": "/elements"
-        },
         {
           "name": "Changelog",
           "url": "/changelog"
