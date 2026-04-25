@@ -1,28 +1,30 @@
-# ---------- Stage 1 ----------
+# ---------- Stage 1: Build ----------
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-RUN corepack enable
+# Install dependencies first (better caching)
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Copy only dependency files first (better caching)
-COPY package.json yarn.lock ./
-
-RUN yarn install --frozen-lockfile --non-interactive
-
-# Now copy everything else
+# Copy application source
 COPY . .
 
-RUN yarn build
+# Build the app
+RUN npm run build
 
 
-# ---------- Stage 2 ----------
+# ---------- Stage 2: Serve ----------
 FROM nginx:alpine
 
+# Remove default nginx content
 RUN rm -rf /usr/share/nginx/html/*
 
+# Copy build output (adjust if needed!)
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+# Expose port
 EXPOSE 80
 
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
