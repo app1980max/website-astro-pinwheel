@@ -37,12 +37,7 @@ key_features:
     - icon: "FiBell" #icon package react-icons
       title: Sound Amplifier
       content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    - icon: "FiMap" #icon package react-icons
-      title: Smart Reply
-      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    - icon: "FiMonitor" #icon package react-icons
-      title: Live Caption
-      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 
 #service
 service:
