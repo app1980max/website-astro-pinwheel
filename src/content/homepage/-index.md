@@ -1,6 +1,6 @@
 ---
 banner:
-  title: "Scale design & operations with Kubernetes Enterprise"
+  title: "Scale infrastructure and operations with Kubernetes"
   content: "A fully integrated suite of authentication & authoriz products, Stytch’s platform removes the headache of."
   image: /images/banner-img.png
   button:
