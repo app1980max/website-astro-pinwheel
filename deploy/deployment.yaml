@@ -41,12 +41,7 @@ spec:
               path: /
               port: 80
             initialDelaySeconds: 30
-            timeoutSeconds: 2
-            
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 3"]
+
       restartPolicy: Always
       nodeSelector: {}    
 
