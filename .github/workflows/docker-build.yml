@@ -76,7 +76,6 @@ jobs:
            astro-pinwheel=${IMAGE} \
            -n $NAMESPACE
           
-
       # ⏳ Wait rollout
       - name: Wait for rollout
         run: |
